@@ -1,4 +1,5 @@
-import { ChevronDown, Home, Pill, Stethoscope } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { BiHome, BiStore, BiUserPlus } from "react-icons/bi";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "../Button";
@@ -6,149 +7,153 @@ import { Button } from "../Button";
 export function Sidebar() {
   const location = useLocation();
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
-  const [isActiveLab, setIsActiveLab] = useState(false);
-  const [isActiveClinic, setIsActiveClinic] = useState(false);
+  const [isActiveStudents, setIsActiveStudents] = useState(false);
+  const [isActiveAcademy, setIsActiveAcademy] = useState(false);
 
   return (
     <div className="h=[calc(100vh-73px)]">
       <aside
-        className="h-full w-12 transition-all duration-500 data-[close=false]:w-[210px]"
+        className="h-full w-12 transition-all duration-500 data-[close=false]:w-[210px] "
         data-close={!isOpenSidebar}
       >
-        <ul className="bg-[#0093e7] h-full pt-2 relative">
+        <ul className="h-full pt-2 relative">
           {/* item-single */}
-          {/* ao clicar nesse, redireciona direto para a tela */}
           <li
-            className="list-none py-2.5 hover:bg-[#253d50] cursor-pointer data-[selected=true]:bg-[#253d50] overflow-hidden"
+            className="list-none py-2.5 hover:bg-[#B984DB] cursor-pointer data-[selected=true]:bg-[#ffffff] overflow-hidden"
             data-selected={location.pathname === "/"}
           >
-            <a href="/" className="flex no-underline text-white items-center">
-              <Home className="min-w-[48px] h-4" />
+            <a href="/" className="flex no-underline text-black items-center">
+              <BiHome className="min-w-[48px] h-4" />
               <span
                 className="font-semibold text-sm transition-all delay-100 opacity-0 data-[close=false]:block data-[close=false]:!opacity-100"
                 data-close={!isOpenSidebar}
               >
-                Home
+                Início
               </span>
             </a>
           </li>
 
           {/* item-multiple */}
-          {/* ao clicar nesse, abre o submenu, e ao clicar em um elemento do submenu, redireciona para a tela */}
           <li
-            className="group overflow-hidden cursor-pointer hover:bg-[#253d50] data-[selected=true]:bg-[#253d50]"
-            data-active={isActiveLab}
-            data-selected={location.pathname.includes("/clinica")}
+            className="group overflow-hidden cursor-pointer hover:bg-[#B984DB] data-[selected=true]:bg-[#ffffff]"
+            data-active={isActiveStudents}
+            data-selected={location.pathname.includes("/academy")}
           >
             <button
-              className="py-2.5 flex items-center justify-between text-white w-full"
-              onClick={() => setIsActiveClinic(!isActiveClinic)}
+              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#B984DB] bg-[#ffffff]"
+              onClick={() => setIsActiveAcademy(!isActiveAcademy)}
             >
-              <a href="/clinica" className="flex items-center">
-                <Stethoscope className="min-w-[48px] h-4" />
+              <a
+                href="/academy"
+                className="flex items-center"
+                data-selected={location.pathname.includes("academy/classes")}
+              >
+                <BiStore className="min-w-[33px] h-4 text-center" />
                 <span
                   className="font-semibold transition-all text-sm delay-100 opacity-0 data-[close=false]:block data-[close=false]:!opacity-100"
                   data-close={!isOpenSidebar}
                 >
-                  Clínica
+                  Academia
                 </span>
               </a>
               <ChevronDown
                 className="min-w-[48px] h-6 transition-all duration-300 opacity-0 data-[close=false]:block data-[close=false]:!opacity-100 data-[active=true]:rotate-[180deg]"
                 data-close={!isOpenSidebar}
-                data-active={isActiveClinic}
+                data-active={!isActiveAcademy}
               />
             </button>
 
             {/* submenu */}
             <ul
-              className="hidden data-[active=true]:block pb-1 pr-2 pl-16 bg-[#253d50] data-[close=true]:absolute data-[close=true]:z-50 data-[close=true]:left-[100%] data-[close=true]:!-mt-14 data-[close=true]:py-2 data-[close=true]:px-5 data-[close=true]:min-w-max data-[close=true]:rounded-r-md data-[close=true]:hidden data-[close=true]:opacity-0 data-[close=true]:group-hover:block data-[close=true]:group-hover:opacity-100"
+              className="hidden data-[active=true]:block pb-1 pr-2 pl-16  bg-[#ffffff] data-[close=true]:absolute data-[close=true]:z-50 data-[close=true]:left-[100%] data-[close=true]:!-mt-14 data-[close=true]:py-2 data-[close=true]:px-5 data-[close=true]:min-w-max data-[close=true]:rounded-r-md data-[close=true]:hidden data-[close=true]:opacity-0 data-[close=true]:group-hover:block data-[close=true]:group-hover:opacity-100"
               data-close={!isOpenSidebar}
-              data-active={isActiveClinic}
+              data-active={!isActiveAcademy}
             >
               <li>
                 <h3
-                  className="text-white text-lg mt-2 mb-1 font-semibold hidden data-[close=true]:block"
+                  className="text-black text-lg mt-2 mb-1 font-semibold hidden data-[close=true]:block"
                   data-close={!isOpenSidebar}
                 >
-                  Clínica
+                  Academia
                 </h3>
               </li>
               <li>
                 <a
-                  href="/clinica/odontologia"
-                  className="text-white text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
-                  data-selected={location.pathname.includes(
-                    "/clinica/odontologia"
-                  )}
+                  href="/academy/classes"
+                  className="text-black text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
+                  data-selected={location.pathname.includes("academy/classes")}
                 >
-                  Odontologia
+                  Turmas
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/profile/plans"
+                  className="text-black text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
+                  data-selected={location.pathname.includes("profile/plans")}
+                >
+                  Planos
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/profile/gym"
+                  className="text-black text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
+                  data-selected={location.pathname.includes("/profile/gym")}
+                >
+                  Perfil
                 </a>
               </li>
             </ul>
           </li>
 
           {/* item-multiple */}
-          {/* ao clicar nesse, abre o submenu, e ao clicar em um elemento do submenu, redireciona para a tela */}
           <li
-            className="group overflow-hidden cursor-pointer hover:bg-[#253d50] data-[selected=true]:bg-[#253d50]"
-            data-active={isActiveLab}
-            data-selected={location.pathname.includes("/laboratorio")}
+            className="group overflow-hidden cursor-pointer hover:bg-[#ffffff] data-[selected=true]:bg-[#ffffff]"
+            data-active={isActiveStudents}
+            data-selected={location.pathname.includes("/students")}
           >
             <button
-              className="py-2.5 flex items-center justify-between text-white w-full"
-              onClick={() => setIsActiveLab(!isActiveLab)}
+              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#B984DB] bg-[#ffffff]"
+              onClick={() => setIsActiveStudents(!isActiveStudents)}
             >
-              <a href="/laboratorio" className="flex items-center">
-                <Pill className="min-w-[48px] h-4" />
+              <a href="/students" className="flex items-center">
+                <BiUserPlus className="min-w-[35px] h-4" />
                 <span
                   className="font-semibold transition-all text-sm delay-100 opacity-0 data-[close=false]:block data-[close=false]:!opacity-100"
                   data-close={!isOpenSidebar}
                 >
-                  Laboratório
+                  Alunos
                 </span>
               </a>
               <ChevronDown
                 className="min-w-[48px] h-6 transition-all duration-300 opacity-0 data-[close=false]:block data-[close=false]:!opacity-100 data-[active=true]:rotate-[180deg]"
                 data-close={!isOpenSidebar}
-                data-active={isActiveLab}
+                data-active={isActiveStudents}
               />
             </button>
 
             {/* submenu */}
             <ul
-              className="hidden data-[active=true]:block pb-1 pr-2 pl-16 bg-[#253d50] data-[close=true]:absolute data-[close=true]:z-50 data-[close=true]:left-[100%] data-[close=true]:!-mt-14 data-[close=true]:py-2 data-[close=true]:px-5 data-[close=true]:min-w-max data-[close=true]:rounded-r-md data-[close=true]:hidden data-[close=true]:opacity-0 data-[close=true]:group-hover:block data-[close=true]:group-hover:opacity-100"
+              className="hidden data-[active=true]:block pb-1 pr-2 pl-16 bg-[#ffffff] data-[close=true]:absolute data-[close=true]:z-50 data-[close=true]:left-[100%] data-[close=true]:!-mt-14 data-[close=true]:py-2 data-[close=true]:px-5 data-[close=true]:min-w-max data-[close=true]:rounded-r-md data-[close=true]:hidden data-[close=true]:opacity-0 data-[close=true]:group-hover:block data-[close=true]:group-hover:opacity-100"
               data-close={!isOpenSidebar}
-              data-active={isActiveLab}
+              data-active={isActiveStudents}
             >
               <li className="">
                 <h3
-                  className="text-white text-lg mt-2 mb-1 font-semibold hidden data-[close=true]:block"
+                  className="text-black text-lg mt-2 mb-1 font-semibold hidden data-[close=true]:block"
                   data-close={!isOpenSidebar}
                 >
-                  Laboratório
+                  Alunos
                 </h3>
               </li>
               <li>
                 <a
-                  href="/laboratorio/mapa-coleta"
-                  className="text-white text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
-                  data-selected={location.pathname.includes(
-                    "/laboratorio/mapa-coleta"
-                  )}
+                  href="/students"
+                  className="text-black text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
+                  data-selected={location.pathname.includes("/students")}
                 >
-                  Mapa de coleta
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/laboratorio/mapa-resultado"
-                  className="text-white text-sm py-3 block whitespace-nowrap opacity-60 transition-opacity hover:opacity-100 data-[selected=true]:opacity-100"
-                  data-selected={location.pathname.includes(
-                    "/laboratorio/mapa-resultado"
-                  )}
-                >
-                  Mapa de resultado
+                  Alunos
                 </a>
               </li>
             </ul>
@@ -158,12 +163,12 @@ export function Sidebar() {
       <Button
         icon="ChevronRight"
         size="icon"
-        className={`!bg-white !text-secondary-blue border-spacing-1.5 border-secondary-blue absolute bottom-4 left-8 transition-all duration-500 ${
+        className={`bg-blue !text-secondary-blue border-spacing-1.5 border-secondary-blue absolute bottom-4 left-8 transition-all duration-500 ${
           isOpenSidebar ? "left-48 rotate-[180deg]" : ""
         }`}
         onClick={() => {
           setIsOpenSidebar(!isOpenSidebar);
-          setIsActiveLab(false);
+          setIsActiveStudents(false);
         }}
       />
     </div>
