@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
+import GerenciarAluno from "@/pages/alunos/gerenciarAluno/GerenciarAluno";
 
 const router = createBrowserRouter([
   {
@@ -9,6 +10,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/alunos",
+    element: <GerenciarAluno />,
   },
 ]);
 
