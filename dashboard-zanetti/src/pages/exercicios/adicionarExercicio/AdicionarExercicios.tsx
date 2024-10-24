@@ -99,7 +99,7 @@ export default function AdicionarExercicios() {
       <div className="flex flex-col w-full justify-end">
         <InfoBar
           pageTitle="Exercícios"
-          pageDescription="Gerencie os exercícios cadastrados"
+          pageDescription="Cadastre um novo exercício"
         />
         <div className="p-4">
           <form
@@ -154,7 +154,6 @@ export default function AdicionarExercicios() {
             <div className="mb-4">
               <Label>Url vídeo:</Label>
               <Input
-                placeholder="Url do vídeo"
                 type="text"
                 name="VideoExecucao"
                 value={novoExercicio.VideoExecucao}
