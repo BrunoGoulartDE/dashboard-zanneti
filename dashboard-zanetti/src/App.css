@@ -24,7 +24,7 @@ input:focus {
 select {
   @apply border-2 border-gray-300 rounded-lg;
   @apply w-full p-2 my-2;
-  @apply bg-white;
+  @apply bg-gray-100; /* Teste com outra cor */
   @apply text-black;
   @apply font-bold;
   @apply cursor-pointer;
@@ -48,3 +48,9 @@ button {
   color: white;
   scale: 1.1;
 } */
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

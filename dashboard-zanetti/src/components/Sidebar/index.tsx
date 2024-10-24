@@ -169,7 +169,7 @@ export function Sidebar() {
                   className="font-semibold transition-all text-sm delay-100 opacity-0 data-[close=false]:block data-[close=false]:!opacity-100"
                   data-close={!isOpenSidebar}
                 >
-                  Alunos
+                  Exercícios
                 </span>
               </a>
               <ChevronDown

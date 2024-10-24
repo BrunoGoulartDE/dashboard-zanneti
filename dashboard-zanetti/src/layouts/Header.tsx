@@ -1,4 +1,4 @@
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo_1.svg";
 import { useState } from "react";
 import Perfil from "../components/Perfil/Perfil";
 
