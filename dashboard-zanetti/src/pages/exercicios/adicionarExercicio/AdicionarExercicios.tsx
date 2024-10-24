@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import MainLayout from "@/layouts/MainLayout";
 import InfoBar from "@/layouts/InfoBar";
 import { Button } from "@/components/ui/button";
@@ -14,8 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "react-toastify";
-
-const API_URL = "http://191.101.70.68:3000";
+import api from "@/api";
 
 interface Exercicio {
   ExercicioID: number;
@@ -37,7 +35,7 @@ export default function AdicionarExercicios() {
   const getExercicios = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/exercicios`);
+      const response = await api.get(`/exercicios`);
       setData(response.data);
       setLoading(false);
     } catch (error) {
@@ -56,10 +54,7 @@ export default function AdicionarExercicios() {
       const novoExercicioData = { ExercicioID: newId, ...novoExercicio };
 
       try {
-        const response = await axios.post(
-          `${API_URL}/exercicios`,
-          novoExercicioData
-        );
+        const response = await api.post(`/exercicios`, novoExercicioData);
         console.log("Exercício adicionado no servidor:", response.data);
 
         setData((prev) => [...prev, response.data]);

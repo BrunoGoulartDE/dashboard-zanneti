@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import MainLayout from "@/layouts/MainLayout";
 import InfoBar from "@/layouts/InfoBar";
 import { DataTable } from "./components/data-table";
 import { columns, Exercicio } from "./components/columns";
-
-const API_URL = "http://191.101.70.68:3000";
+import api from "@/api";
 
 export default function Exercicios() {
   const [data, setData] = useState<Exercicio[]>([]);
@@ -13,7 +11,7 @@ export default function Exercicios() {
 
   async function getExercicios(): Promise<void> {
     try {
-      const response = await axios.get(`${API_URL}/exercicios`);
+      const response = await api.get(`/exercicios`);
       console.log(response.data);
       setData(response.data);
       setLoading(false);
