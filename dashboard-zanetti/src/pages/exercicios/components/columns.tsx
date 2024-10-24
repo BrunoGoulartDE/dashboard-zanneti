@@ -19,6 +19,7 @@ export type Exercicio = {
   NomeExercicio: string;
   Observacoes: string;
   Categoria: string;
+  VideoExecucao: string;
 };
 
 export const columns: ColumnDef<Exercicio>[] = [
@@ -43,18 +44,14 @@ export const columns: ColumnDef<Exercicio>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abir menu</span>
+              <span className="sr-only">Abrir menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(exercicio.ExercicioID.toString())
-              }
-            >
+            <DropdownMenuItem>
               <BiTrash />
               Excluir
             </DropdownMenuItem>
@@ -62,14 +59,15 @@ export const columns: ColumnDef<Exercicio>[] = [
               <BiEdit />
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => window.open(exercicio.VideoExecucao)}
+            >
               <BiGlasses />
-              vídeo
+              Visualizar Vídeo
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
-  // ...
 ];
