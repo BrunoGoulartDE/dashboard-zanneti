@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "react-toastify";
 
 const API_URL = "http://191.101.70.68:3000";
 
@@ -68,12 +69,15 @@ export default function AdicionarExercicios() {
           Observacoes: "",
           VideoExecucao: "",
         });
+        console.log(novoExercicio);
         setLoading(false);
+        toast.success("Exercício adicionado com sucesso!");
       } catch (error) {
         console.error("Erro ao adicionar exercício:", error);
         setLoading(false);
       }
     } else {
+      console.log(novoExercicio);
       console.error("Por favor, preencha todos os campos obrigatórios.");
     }
   };
@@ -81,6 +85,9 @@ export default function AdicionarExercicios() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNovoExercicio((prevState) => ({ ...prevState, [name]: value }));
+  };
+  const handleSelectChange = (value: string) => {
+    setNovoExercicio((prev) => ({ ...prev, Categoria: value }));
   };
 
   useEffect(() => {
@@ -102,21 +109,23 @@ export default function AdicionarExercicios() {
             }}
           >
             <div className="mb-4">
-              <Label htmlFor="nome">Nome:</Label>
+              <Label>Nome:</Label>
               <Input
-                id="nome"
                 type="text"
                 name="NomeExercicio"
                 value={novoExercicio.NomeExercicio}
                 onChange={handleChange}
-                required
-                className="border p-2 w-full"
-              ></Input>
+                className="border-2 border-gray-300 rounded-lg p-2 my-2 bg-white text-black"
+              />
             </div>
 
-            <div className="flex flex-col w-full ">
-              <Label htmlFor="categoria">Categoria:</Label>
-              <Select>
+            <div className="flex flex-col w-full p-2">
+              <Label>Categoria:</Label>
+              <Select
+                value={novoExercicio.Categoria}
+                onValueChange={handleSelectChange}
+                required
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
@@ -124,17 +133,16 @@ export default function AdicionarExercicios() {
                   <SelectItem value="Peito">Peito</SelectItem>
                   <SelectItem value="Perna">Perna</SelectItem>
                   <SelectItem value="Tríceps">Tríceps</SelectItem>
+                  <SelectItem value="Bíceps">Bíceps</SelectItem>
                   <SelectItem value="Ombro">Ombro</SelectItem>
                   <SelectItem value="Costas">Costas</SelectItem>
                   <SelectItem value="Abdômen">Abdômen</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
             <div className="mb-4">
-              <Label htmlFor="observacao">Observações:</Label>
+              <Label>Observações:</Label>
               <Input
-                id="observacao"
                 type="text"
                 name="Observacoes"
                 value={novoExercicio.Observacoes}
@@ -144,9 +152,8 @@ export default function AdicionarExercicios() {
             </div>
 
             <div className="mb-4">
-              <Label htmlFor="url">Url vídeo:</Label>
+              <Label>Url vídeo:</Label>
               <Input
-                id="url"
                 placeholder="Url do vídeo"
                 type="text"
                 name="VideoExecucao"
