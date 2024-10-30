@@ -26,25 +26,21 @@ import api from "@/api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { ErrorResponse } from "@/types/ErrorResponse";
-
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  password: z.string().min(5), //Alterar para 8 quando tiver essa validação no backend
-});
+import { sendSignIn } from "@/schemas/SignInForm";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof sendSignIn>>({
+    resolver: zodResolver(sendSignIn),
     defaultValues: {
       username: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof sendSignIn>) {
     setLoading(true);
     try {
       const response = await api.post(`/auth/login`, {
