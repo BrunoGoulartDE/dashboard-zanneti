@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
+import logo from "../../assets/logo.png";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -67,12 +67,10 @@ const SignIn = () => {
       setLoading(false);
     }
   }
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
-    <div className=" flex items-center justify-center h-screen bg-black">
+    <div className=" flex flex-col items-center justify-center h-screen bg-black">
+      <img src={logo} alt="user image" className="w-48 " />
       <Card className="w-[350px]">
         <CardHeader className="items-center">
           <CardTitle className="text-3xl">Seja bem-vindo Leuri</CardTitle>
