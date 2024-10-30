@@ -3,8 +3,13 @@ import App from "../App";
 import GerenciarAluno from "@/pages/alunos/gerenciarAluno/GerenciarAluno";
 import Exercicios from "@/pages/exercicios/Exercicios";
 import AdicionarExercicios from "@/pages/exercicios/adicionarExercicio/AdicionarExercicios";
+import SignIn from "@/pages/Public/signIn";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <SignIn />,
+  },
   {
     path: "/home",
     element: <App />,
