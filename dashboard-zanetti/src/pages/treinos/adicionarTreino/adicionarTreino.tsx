@@ -181,7 +181,6 @@ export default function AdicionarTreinos() {
     const exercicioDetail =
       exercicioDetails[selectedExercicio.ExercicioID] || {};
 
-    // Criação do objeto de exercício a ser salvo
     const exercicioSalvo: ExercicioTreino = {
       ExercicioID: selectedExercicio.ExercicioID,
       NomeExercicio: selectedExercicio.NomeExercicio || "Exercício sem nome",
@@ -190,31 +189,26 @@ export default function AdicionarTreinos() {
       observacoes: exercicioDetail.observacoes || "Sem Observações",
     };
 
-    // Atualiza os exerciciosSalvos no estado
     setExerciciosSalvos((prevExercicios: ExercicioTreino[]) => {
-      // Verifica se o exercício já existe no estado de exercicios salvos
       const exercicioExistente = prevExercicios.find(
         (e) => e.ExercicioID === selectedExercicio.ExercicioID
       );
 
       let updatedExercicios: ExercicioTreino[];
       if (exercicioExistente) {
-        // Se já existe, substitui os dados do exercício
         updatedExercicios = prevExercicios.map((e) =>
           e.ExercicioID === selectedExercicio.ExercicioID ? exercicioSalvo : e
         );
       } else {
-        // Caso contrário, adiciona um novo exercício
         updatedExercicios = [...prevExercicios, exercicioSalvo];
       }
 
-      // Exibe o estado atualizado no console
       console.log("Estado atualizado de exerciciosSalvos:", updatedExercicios);
 
       return updatedExercicios;
     });
 
-    setDialogOpen(false); // Fecha o modal de edição após salvar
+    setDialogOpen(false);
   };
 
   return (
