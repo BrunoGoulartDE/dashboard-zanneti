@@ -33,7 +33,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BiXCircle } from "react-icons/bi";
+import { BiCheckCircle, BiXCircle } from "react-icons/bi";
 
 interface Exercicio {
   ExercicioID: number;
@@ -356,8 +356,9 @@ export default function AdicionarTreinos() {
 
                             <Button
                               onClick={saveExercicioDetails}
-                              className="bg-blue-500 text-white"
+                              className="bg-color text-black"
                             >
+                              <BiCheckCircle />
                               Salvar
                             </Button>
                           </AlertDialogFooter>
