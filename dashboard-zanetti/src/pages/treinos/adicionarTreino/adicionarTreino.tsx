@@ -116,9 +116,9 @@ export default function AdicionarTreinos() {
     setExercicioDetails((prev) => ({
       ...prev,
       [exercicio.ExercicioID]: {
-        series: prev[exercicio.ExercicioID]?.series || "", // Valor padrão se não houver
-        reps: prev[exercicio.ExercicioID]?.reps || "", // Valor padrão se não houver
-        observacoes: prev[exercicio.ExercicioID]?.observacoes || "", // Valor padrão se não houver
+        series: prev[exercicio.ExercicioID]?.series || "",
+        reps: prev[exercicio.ExercicioID]?.reps || "",
+        observacoes: prev[exercicio.ExercicioID]?.observacoes || "",
       },
     }));
   };
@@ -137,38 +137,27 @@ export default function AdicionarTreinos() {
 
   const handleSelectExercicio = (exercicio: Exercicio) => {
     setSelectedTreino((prev) => {
-      // Verifica se o exercício já está na lista
       const exercicioExistente = prev.find(
         (e) => e.ExercicioID === exercicio.ExercicioID
       );
 
       if (exercicioExistente) {
-        // Se o exercício já existir, remove o antigo e adiciona o atualizado
-        return prev.map((e) =>
-          e.ExercicioID === exercicio.ExercicioID ? exercicio : e
-        );
+        return prev.filter((e) => e.ExercicioID !== exercicio.ExercicioID);
       } else {
-        // Caso contrário, adiciona o novo exercício
         return [...prev, exercicio];
       }
     });
 
     setExerciciosSalvos((prevExercicios: ExercicioTreino[]) => {
-      // Se o exercício já existir nos exercícios salvos, remove o antigo
       const exercicioExistente = prevExercicios.find(
         (e) => e.ExercicioID === exercicio.ExercicioID
       );
 
       if (exercicioExistente) {
-        // Substitui o exercício existente com os dados mais atualizados
-        const updatedExercicios = prevExercicios.map((e) =>
-          e.ExercicioID === exercicio.ExercicioID
-            ? { ...e, NomeExercicio: exercicio.NomeExercicio }
-            : e
+        return prevExercicios.filter(
+          (e) => e.ExercicioID !== exercicio.ExercicioID
         );
-        return updatedExercicios;
       } else {
-        // Se não existir, adiciona o novo exercício
         const exercicioDetail = exercicioDetails[exercicio.ExercicioID] || {};
         const exercicioSalvo: ExercicioTreino = {
           ExercicioID: exercicio.ExercicioID,
@@ -182,6 +171,7 @@ export default function AdicionarTreinos() {
       }
     });
   };
+
   const saveExercicioDetails = () => {
     if (!selectedExercicio || !selectedExercicio.ExercicioID) {
       console.error("Nenhum exercício selecionado.");
