@@ -40,19 +40,40 @@ interface Exercicio {
   Categoria: string;
 }
 
+interface ExercicioDetails {
+  [key: number]: {
+    series: string;
+    reps: string;
+    observacoes: string;
+  };
+}
+
+interface ExercicioTreino {
+  ExercicioID: number;
+  NomeExercicio: string;
+  series: string;
+  reps: string;
+  observacoes: string;
+}
+
 export default function AdicionarTreinos() {
+  const [, setExerciciosSalvos] = useState<ExercicioTreino[]>([]);
   const [exercicios, setExercicios] = useState<Exercicio[]>([]);
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedExercicios, setSelectedExercicios] = useState<number[]>([]);
-  const [selectedTreino, setSelectedTreino] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedExercicio, setSelectedExercicio] = useState<Exercicio>(null);
-  const [series, setSeries] = useState("");
-  const [reps, setReps] = useState("");
-  const [observacoes, setObservacoes] = useState("");
+  const [selectedTreino, setSelectedTreino] = useState<Exercicio[]>([]);
+  const [series] = useState("");
+  const [reps] = useState("");
+  const [observacoes] = useState("");
+  const [selectedExercicio, setSelectedExercicio] = useState<Exercicio | null>(
+    null
+  );
 
-  const getExercicios = async () => {
+  const [exercicioDetails, setExercicioDetails] = useState<ExercicioDetails>(
+    {}
+  );
+
+  const obterExercicios = async () => {
     setLoading(true);
     try {
       const response = await api.get(`/exercicios`);
@@ -81,23 +102,34 @@ export default function AdicionarTreinos() {
   }, []);
 
   useEffect(() => {
-    getExercicios();
+    obterExercicios();
   }, []);
 
-  const handleToggle = (value: number) => {
-    setSelectedExercicios((prev) =>
-      prev.includes(value)
-        ? prev.filter((ex) => ex !== value)
-        : [...prev, value]
-    );
-  };
-  const openExercicioDialog = (exercicio) => {
+  const openExercicioDialog = (exercicio: Exercicio) => {
     setSelectedExercicio(exercicio);
-    setSeries("");
-    setReps("");
-    setObservacoes("");
+    setExercicioDetails((prev) => ({
+      ...prev,
+      [exercicio.ExercicioID]: {
+        series: prev[exercicio.ExercicioID]?.series || "",
+        reps: prev[exercicio.ExercicioID]?.reps || "",
+        observacoes: prev[exercicio.ExercicioID]?.observacoes || "",
+      },
+    }));
   };
-  const handleSelectExercicio = (exercicio) => {
+
+  const handleInputChange = (field: string, value: string) => {
+    if (selectedExercicio) {
+      setExercicioDetails((prev) => ({
+        ...prev,
+        [selectedExercicio.ExercicioID]: {
+          ...prev[selectedExercicio.ExercicioID],
+          [field]: value,
+        },
+      }));
+    }
+  };
+
+  const handleSelectExercicio = (exercicio: Exercicio) => {
     setSelectedTreino((prev) =>
       prev.some((e) => e.ExercicioID === exercicio.ExercicioID)
         ? prev.filter((e) => e.ExercicioID !== exercicio.ExercicioID)
@@ -106,12 +138,19 @@ export default function AdicionarTreinos() {
   };
 
   const saveExercicioDetails = () => {
-    console.log("Salvando:", {
-      NomeExercicio: selectedExercicio?.NomeExercicio,
+    const exercicioSalvo: ExercicioTreino = {
+      ExercicioID: selectedExercicio?.ExercicioID || 0,
+      NomeExercicio: selectedExercicio?.NomeExercicio || "",
       series,
       reps,
       observacoes,
+    };
+    setExerciciosSalvos((prevExercicios: ExercicioTreino[]) => {
+      const updatedExercicios = [...prevExercicios, exercicioSalvo];
+      console.log("Estado atualizado:", updatedExercicios);
+      return updatedExercicios;
     });
+
     setSelectedExercicio(null);
   };
 
@@ -150,6 +189,7 @@ export default function AdicionarTreinos() {
               <ToggleGroupItem value="Dom">Dom</ToggleGroupItem>
             </ToggleGroup>
             <div className="flex flex-row gap-4">
+              {/* Card Treino do Dia */}
               <Card className="w-1/2">
                 <CardContent>
                   <CardHeader>
@@ -167,9 +207,21 @@ export default function AdicionarTreinos() {
                         <AlertDialogTrigger asChild>
                           <div
                             onClick={() => openExercicioDialog(exercicio)}
-                            className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-blue-100"
+                            className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-blue-100 flex justify-between items-center"
                           >
-                            {exercicio.NomeExercicio}
+                            <span>{exercicio.NomeExercicio}</span>
+                            <div className="coluna-numeros flex gap-2 text-sm text-gray-600">
+                              <div className="set font-bold border px-2 py-1 rounded-md border-gray-400">
+                                Sets:{" "}
+                                {exercicioDetails[exercicio.ExercicioID]
+                                  ?.series || 0}
+                              </div>
+                              <div className="rep font-bold border px-2 py-1 rounded-md border-gray-400">
+                                Reps:{" "}
+                                {exercicioDetails[exercicio.ExercicioID]
+                                  ?.reps || 0}
+                              </div>
+                            </div>
                           </div>
                         </AlertDialogTrigger>
 
@@ -189,8 +241,13 @@ export default function AdicionarTreinos() {
                               <label>Sets</label>
                               <input
                                 type="number"
-                                value={series}
-                                onChange={(e) => setSeries(e.target.value)}
+                                value={
+                                  exercicioDetails[exercicio.ExercicioID]
+                                    ?.series || ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange("series", e.target.value)
+                                }
                                 className="w-full p-2 border rounded"
                               />
                             </div>
@@ -198,16 +255,29 @@ export default function AdicionarTreinos() {
                               <label>Reps</label>
                               <input
                                 type="number"
-                                value={reps}
-                                onChange={(e) => setReps(e.target.value)}
+                                value={
+                                  exercicioDetails[exercicio.ExercicioID]
+                                    ?.reps || ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange("reps", e.target.value)
+                                }
                                 className="w-full p-2 border rounded"
                               />
                             </div>
                             <div>
                               <label>Observações</label>
                               <textarea
-                                value={observacoes}
-                                onChange={(e) => setObservacoes(e.target.value)}
+                                value={
+                                  exercicioDetails[exercicio.ExercicioID]
+                                    ?.observacoes || ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    "observacoes",
+                                    e.target.value
+                                  )
+                                }
                                 className="w-full p-2 border rounded"
                               ></textarea>
                             </div>
@@ -230,13 +300,11 @@ export default function AdicionarTreinos() {
                   </div>
                 </CardContent>
               </Card>
+
               <Card className="w-1/2">
                 <CardContent>
                   <CardHeader>
                     <CardTitle>Lista de Exercícios</CardTitle>
-                    <CardDescription>
-                      Clique em um exercício para adicionar ao treino.
-                    </CardDescription>
                   </CardHeader>
                   {loading ? (
                     <p>Carregando...</p>
@@ -250,6 +318,14 @@ export default function AdicionarTreinos() {
                           key={exercicio.ExercicioID}
                           value={exercicio.NomeExercicio}
                           onClick={() => handleSelectExercicio(exercicio)}
+                          className={`p-2 rounded-lg ${
+                            selectedTreino.some(
+                              (e: Exercicio) =>
+                                e.ExercicioID === exercicio.ExercicioID
+                            )
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-100"
+                          }`}
                         >
                           {exercicio.NomeExercicio}
                         </ToggleGroupItem>
