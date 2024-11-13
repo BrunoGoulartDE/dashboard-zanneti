@@ -4,6 +4,7 @@ import GerenciarAluno from "@/pages/alunos/gerenciarAluno/GerenciarAluno";
 import Exercicios from "@/pages/exercicios/Exercicios";
 import AdicionarExercicios from "@/pages/exercicios/adicionarExercicio/AdicionarExercicios";
 import SignIn from "@/pages/Public/signIn";
+import AdicionarTreinos from "@/pages/treinos/adicionarTreino/adicionarTreino";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/exercicio/adicionar",
     element: <AdicionarExercicios />,
+  },
+  {
+    path: "/treinos/adicionar",
+    element: <AdicionarTreinos />,
   },
 ]);
 

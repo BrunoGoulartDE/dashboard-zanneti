@@ -24,7 +24,7 @@ input:focus {
 select {
   @apply border-2 border-gray-300 rounded-lg;
   @apply w-full p-2 my-2;
-  @apply bg-gray-100; /* Teste com outra cor */
+  @apply bg-gray-500; /* Teste com outra cor */
   @apply text-black;
   @apply font-bold;
   @apply cursor-pointer;
@@ -32,8 +32,8 @@ select {
 button {
   width: 100%;
   background-color: var(--detail-color);
-  color: white;
-  border: none;
+  color: black;
+  border: black;
   padding: 0.5rem;
   border-radius: 0.5rem;
   transition: all 0.3s ease;
