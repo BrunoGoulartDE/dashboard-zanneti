@@ -12,6 +12,16 @@ import {
 } from "@/components/ui/select";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 import api from "@/api";
 import { Label } from "@/components/ui/label";
@@ -34,7 +44,13 @@ export default function AdicionarTreinos() {
   const [exercicios, setExercicios] = useState<Exercicio[]>([]);
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedExercicios, setSelectedExercicios] = useState<number[]>([]); // Define o tipo como number[]
+  const [selectedExercicios, setSelectedExercicios] = useState<number[]>([]);
+  const [selectedTreino, setSelectedTreino] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedExercicio, setSelectedExercicio] = useState<Exercicio>(null);
+  const [series, setSeries] = useState("");
+  const [reps, setReps] = useState("");
+  const [observacoes, setObservacoes] = useState("");
 
   const getExercicios = async () => {
     setLoading(true);
@@ -75,6 +91,29 @@ export default function AdicionarTreinos() {
         : [...prev, value]
     );
   };
+  const openExercicioDialog = (exercicio) => {
+    setSelectedExercicio(exercicio);
+    setSeries("");
+    setReps("");
+    setObservacoes("");
+  };
+  const handleSelectExercicio = (exercicio) => {
+    setSelectedTreino((prev) =>
+      prev.some((e) => e.ExercicioID === exercicio.ExercicioID)
+        ? prev.filter((e) => e.ExercicioID !== exercicio.ExercicioID)
+        : [...prev, exercicio]
+    );
+  };
+
+  const saveExercicioDetails = () => {
+    console.log("Salvando:", {
+      NomeExercicio: selectedExercicio?.NomeExercicio,
+      series,
+      reps,
+      observacoes,
+    });
+    setSelectedExercicio(null);
+  };
 
   return (
     <MainLayout>
@@ -101,7 +140,7 @@ export default function AdicionarTreinos() {
             </Select>
           </div>
           <div>
-            <ToggleGroup type="multiple">
+            <ToggleGroup type="single">
               <ToggleGroupItem value="Seg">Seg</ToggleGroupItem>
               <ToggleGroupItem value="Ter">Ter</ToggleGroupItem>
               <ToggleGroupItem value="Qua">Qua</ToggleGroupItem>
@@ -116,15 +155,88 @@ export default function AdicionarTreinos() {
                   <CardHeader>
                     <CardTitle>Treino do dia</CardTitle>
                     <CardDescription>
-                      Escolha os exercícios para hoje.
+                      Clique em um exercício para editar.
                     </CardDescription>
                   </CardHeader>
+                  <div className="mt-4 grid grid-cols-1 gap-2">
+                    {selectedTreino.map((exercicio: Exercicio) => (
+                      <AlertDialog
+                        key={exercicio.ExercicioID}
+                        open={selectedExercicio === exercicio}
+                      >
+                        <AlertDialogTrigger asChild>
+                          <div
+                            onClick={() => openExercicioDialog(exercicio)}
+                            className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-blue-100"
+                          >
+                            {exercicio.NomeExercicio}
+                          </div>
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Editar Exercício
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Configure as séries, repetições e observações para
+                              este exercício.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          <div className="flex flex-col gap-4">
+                            <div>
+                              <label>Sets</label>
+                              <input
+                                type="number"
+                                value={series}
+                                onChange={(e) => setSeries(e.target.value)}
+                                className="w-full p-2 border rounded"
+                              />
+                            </div>
+                            <div>
+                              <label>Reps</label>
+                              <input
+                                type="number"
+                                value={reps}
+                                onChange={(e) => setReps(e.target.value)}
+                                className="w-full p-2 border rounded"
+                              />
+                            </div>
+                            <div>
+                              <label>Observações</label>
+                              <textarea
+                                value={observacoes}
+                                onChange={(e) => setObservacoes(e.target.value)}
+                                className="w-full p-2 border rounded"
+                              ></textarea>
+                            </div>
+                          </div>
+
+                          <AlertDialogFooter>
+                            <Button onClick={() => setSelectedExercicio(null)}>
+                              Cancelar
+                            </Button>
+                            <Button
+                              onClick={saveExercicioDetails}
+                              className="bg-blue-500 text-white"
+                            >
+                              Salvar
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
               <Card className="w-1/2">
                 <CardContent>
                   <CardHeader>
                     <CardTitle>Lista de Exercícios</CardTitle>
+                    <CardDescription>
+                      Clique em um exercício para adicionar ao treino.
+                    </CardDescription>
                   </CardHeader>
                   {loading ? (
                     <p>Carregando...</p>
@@ -137,7 +249,7 @@ export default function AdicionarTreinos() {
                         <ToggleGroupItem
                           key={exercicio.ExercicioID}
                           value={exercicio.NomeExercicio}
-                          onClick={() => handleToggle(exercicio.ExercicioID)}
+                          onClick={() => handleSelectExercicio(exercicio)}
                         >
                           {exercicio.NomeExercicio}
                         </ToggleGroupItem>
