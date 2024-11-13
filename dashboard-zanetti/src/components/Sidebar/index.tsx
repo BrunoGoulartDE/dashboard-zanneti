@@ -2,7 +2,7 @@ import { ChevronDown } from "lucide-react";
 import { BiHome, BiStore, BiUserPlus } from "react-icons/bi";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Button } from "../Button";
+import { Button } from "@/components/ui/button";
 import { CgGym } from "react-icons/cg";
 
 export function Sidebar() {
@@ -209,7 +209,6 @@ export function Sidebar() {
         </ul>
       </aside>
       <Button
-        icon="ChevronRight"
         size="icon"
         className={`bg-blue !text-secondary-blue border-spacing-1.5 border-secondary-blue absolute bottom-4 left-8 transition-all duration-500 ${
           isOpenSidebar ? "left-48 rotate-[180deg]" : ""

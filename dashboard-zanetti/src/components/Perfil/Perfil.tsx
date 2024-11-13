@@ -1,5 +1,5 @@
 import logo from "../../assets/logo.svg";
-import { Button } from "../Button";
+import { Button } from "@/components/ui/button";
 
 function Perfil({ name, avatar }: { name: string; avatar: string }) {
   return (
