@@ -346,9 +346,12 @@ export default function AdicionarTreinos() {
                           </div>
 
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="bg-white border-2 border-gray-300 text-[#7209B7] px-4 py-2 rounded-md">
-                              <BiXCircle onClick={() => setDialogOpen(false)} />
-                              Cancelar
+                            <AlertDialogCancel
+                              className="bg-white border-2 border-gray-300 text-[#7209B7] px-4 py-2 rounded-md flex items-center space-x-2"
+                              onClick={() => setDialogOpen(false)} // A ação de fechamento do diálogo
+                            >
+                              <BiXCircle />
+                              <span>Cancelar</span>
                             </AlertDialogCancel>
 
                             <Button

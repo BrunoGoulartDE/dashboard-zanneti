@@ -33,6 +33,7 @@ export const columns: ColumnDef<Aluno>[] = [
     header: "Nome",
   },
   {
+    header: "Ações",
     id: "actions",
     cell: ({ row }) => {
       const aluno = row.original;

@@ -115,7 +115,6 @@ export default function AdicionarExercicios() {
             </div>
 
             <div className="flex flex-col w-full p-2">
-              <Label>Categoria:</Label>
               <Select
                 value={novoExercicio.Categoria}
                 onValueChange={handleSelectChange}

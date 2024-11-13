@@ -37,7 +37,7 @@ const GerenciarAluno = () => {
             pageTitle="Gerenciar alunos"
             pageDescription={`Gerencie seus alunos`}
           ></InfoBar>
-          <div className="container mx-auto py-10">
+          <div className="w-full mt-2">
             <DataTable columns={columns} data={alunos} />
           </div>
         </div>
