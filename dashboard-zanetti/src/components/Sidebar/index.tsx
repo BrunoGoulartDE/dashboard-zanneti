@@ -20,7 +20,7 @@ export function Sidebar() {
         <ul className="h-full pt-2 relative">
           {/* item-single */}
           <li
-            className="list-none py-2.5 hover:bg-[#B984DB] cursor-pointer data-[selected=true]:bg-[#ffffff] overflow-hidden"
+            className="list-none py-2.5 hover:bg-[#ffb744] cursor-pointer data-[selected=true]:bg-[#ffffff] overflow-hidden"
             data-selected={location.pathname === "/"}
           >
             <a href="/" className="flex no-underline text-black items-center">
@@ -36,12 +36,12 @@ export function Sidebar() {
 
           {/* item-multiple */}
           <li
-            className="group overflow-hidden cursor-pointer hover:bg-[#B984DB] data-[selected=true]:bg-[#ffffff]"
+            className="group overflow-hidden cursor-pointer hover:bg-[#ffb744] data-[selected=true]:bg-[#ffffff]"
             data-active={isActiveStudents}
             data-selected={location.pathname.includes("/Workouts")}
           >
             <button
-              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#B984DB] bg-[#ffffff]"
+              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#ffb744] bg-[#ffffff]"
               onClick={() => setIsActiveWorkouts(!isActiveWorkouts)}
             >
               <a
@@ -108,7 +108,7 @@ export function Sidebar() {
             data-selected={location.pathname.includes("/alunos")}
           >
             <button
-              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#B984DB] bg-[#ffffff]"
+              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#ffb744] bg-[#ffffff]"
               onClick={() => setIsActiveStudents(!isActiveStudents)}
             >
               <a href="/alunos" className="flex items-center">
@@ -160,7 +160,7 @@ export function Sidebar() {
             data-selected={location.pathname.includes("/exercicios")}
           >
             <button
-              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#B984DB] bg-[#ffffff]"
+              className="py-2.5 flex items-center justify-between text-black w-full hover:bg-[#ffb744] bg-[#ffffff]"
               onClick={() => setIsActiveExercises(!isActiveExercises)}
             >
               <a href="/exercicios" className="flex items-center">

@@ -37,7 +37,7 @@ export default function Exercicios() {
             pageTitle="Exercícios"
             pageDescription={`Gerencie os exercícios cadastrados`}
           />
-          <div className="container mx-auto py-10">
+          <div className="w-full">
             <DataTable columns={columns} data={data} />
           </div>
         </div>

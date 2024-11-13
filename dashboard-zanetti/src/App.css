@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 :root {
-  --detail-color: #7209b7;
+  --detail-color: #ffb744;
 }
 
 button {

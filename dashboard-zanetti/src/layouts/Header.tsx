@@ -23,10 +23,8 @@ function Header({ title }: HeaderProps) {
           onClick={() => setIsOpenPerfilDetails(!isOpenPerfilDetails)}
         >
           <img src={logo} alt="user image" className="w-14 rounded-full" />
-          <span className="max-lg:hidden font-bold text-[#3A0CA3]">
-            Olá, Leuri
-          </span>
-          <ChevronDownIcon className="text-[#3A0CA3]"></ChevronDownIcon>
+          <span className="max-lg:hidden font-bold text-black">Olá, Leuri</span>
+          <ChevronDownIcon className="text-black"></ChevronDownIcon>
 
           {isOpenPerfilDetails && <Perfil name={"Leuri"} avatar={logo} />}
         </div>

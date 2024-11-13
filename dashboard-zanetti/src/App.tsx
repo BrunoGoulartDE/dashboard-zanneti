@@ -6,8 +6,8 @@ function App() {
     <MainLayout>
       <div>
         <div className="flex flex-row items-center md:items-start">
-          <h3 className="font-bold text-2xl text-[#3A0CA3] text-center md:text-left">
-            Olá
+          <h3 className="font-bold text-2xl text-black text-center md:text-left">
+            Home
           </h3>
         </div>
       </div>

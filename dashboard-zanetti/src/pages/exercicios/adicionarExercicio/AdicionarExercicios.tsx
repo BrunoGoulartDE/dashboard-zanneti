@@ -103,24 +103,13 @@ export default function AdicionarExercicios() {
               addExercicio();
             }}
           >
-            <div className="mb-4">
-              <Label>Nome:</Label>
-              <Input
-                type="text"
-                name="NomeExercicio"
-                value={novoExercicio.NomeExercicio}
-                onChange={handleChange}
-                className="border-2 border-gray-300 rounded-lg p-2 my-2 bg-white text-black"
-              />
-            </div>
-
             <div className="flex flex-col w-full p-2">
               <Select
                 value={novoExercicio.Categoria}
                 onValueChange={handleSelectChange}
                 required
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] bg-color borde">
                   <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
                 <SelectContent>
@@ -134,6 +123,18 @@ export default function AdicionarExercicios() {
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="mb-4">
+              <Label>Nome:</Label>
+              <Input
+                type="text"
+                name="NomeExercicio"
+                value={novoExercicio.NomeExercicio}
+                onChange={handleChange}
+                className="border-2 border-gray-300 rounded-lg p-2 my-2 bg-white text-black"
+              />
+            </div>
+
             <div className="mb-4">
               <Label>Observações:</Label>
               <Input
@@ -156,7 +157,7 @@ export default function AdicionarExercicios() {
               />
             </div>
             <Button
-              className="bg-color[#7209b7] text-white p-2 rounded"
+              className="bg-color p-2 rounded"
               variant="outline"
               size="sm"
               type="submit"
