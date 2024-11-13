@@ -20,6 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
+  AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
@@ -32,6 +33,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { BiXCircle } from "react-icons/bi";
 
 interface Exercicio {
   ExercicioID: number;
@@ -62,12 +64,15 @@ export default function AdicionarTreinos() {
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedTreino, setSelectedTreino] = useState<Exercicio[]>([]);
-  const [series] = useState("");
-  const [reps] = useState("");
-  const [observacoes] = useState("");
-  const [selectedExercicio, setSelectedExercicio] = useState<Exercicio | null>(
-    null
-  );
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [selectedExercicio, setSelectedExercicio] = useState<Exercicio>({
+    ExercicioID: 0,
+    NomeExercicio: "",
+    Observacoes: "",
+    Categoria: "",
+  });
 
   const [exercicioDetails, setExercicioDetails] = useState<ExercicioDetails>(
     {}
@@ -106,19 +111,20 @@ export default function AdicionarTreinos() {
   }, []);
 
   const openExercicioDialog = (exercicio: Exercicio) => {
+    setDialogOpen(true);
     setSelectedExercicio(exercicio);
     setExercicioDetails((prev) => ({
       ...prev,
       [exercicio.ExercicioID]: {
-        series: prev[exercicio.ExercicioID]?.series || "",
-        reps: prev[exercicio.ExercicioID]?.reps || "",
-        observacoes: prev[exercicio.ExercicioID]?.observacoes || "",
+        series: prev[exercicio.ExercicioID]?.series || "", // Valor padrão se não houver
+        reps: prev[exercicio.ExercicioID]?.reps || "", // Valor padrão se não houver
+        observacoes: prev[exercicio.ExercicioID]?.observacoes || "", // Valor padrão se não houver
       },
     }));
   };
 
   const handleInputChange = (field: string, value: string) => {
-    if (selectedExercicio) {
+    if (selectedExercicio && selectedExercicio.ExercicioID) {
       setExercicioDetails((prev) => ({
         ...prev,
         [selectedExercicio.ExercicioID]: {
@@ -130,28 +136,95 @@ export default function AdicionarTreinos() {
   };
 
   const handleSelectExercicio = (exercicio: Exercicio) => {
-    setSelectedTreino((prev) =>
-      prev.some((e) => e.ExercicioID === exercicio.ExercicioID)
-        ? prev.filter((e) => e.ExercicioID !== exercicio.ExercicioID)
-        : [...prev, exercicio]
-    );
-  };
+    setSelectedTreino((prev) => {
+      // Verifica se o exercício já está na lista
+      const exercicioExistente = prev.find(
+        (e) => e.ExercicioID === exercicio.ExercicioID
+      );
 
-  const saveExercicioDetails = () => {
-    const exercicioSalvo: ExercicioTreino = {
-      ExercicioID: selectedExercicio?.ExercicioID || 0,
-      NomeExercicio: selectedExercicio?.NomeExercicio || "",
-      series,
-      reps,
-      observacoes,
-    };
+      if (exercicioExistente) {
+        // Se o exercício já existir, remove o antigo e adiciona o atualizado
+        return prev.map((e) =>
+          e.ExercicioID === exercicio.ExercicioID ? exercicio : e
+        );
+      } else {
+        // Caso contrário, adiciona o novo exercício
+        return [...prev, exercicio];
+      }
+    });
+
     setExerciciosSalvos((prevExercicios: ExercicioTreino[]) => {
-      const updatedExercicios = [...prevExercicios, exercicioSalvo];
-      console.log("Estado atualizado:", updatedExercicios);
+      // Se o exercício já existir nos exercícios salvos, remove o antigo
+      const exercicioExistente = prevExercicios.find(
+        (e) => e.ExercicioID === exercicio.ExercicioID
+      );
+
+      if (exercicioExistente) {
+        // Substitui o exercício existente com os dados mais atualizados
+        const updatedExercicios = prevExercicios.map((e) =>
+          e.ExercicioID === exercicio.ExercicioID
+            ? { ...e, NomeExercicio: exercicio.NomeExercicio }
+            : e
+        );
+        return updatedExercicios;
+      } else {
+        // Se não existir, adiciona o novo exercício
+        const exercicioDetail = exercicioDetails[exercicio.ExercicioID] || {};
+        const exercicioSalvo: ExercicioTreino = {
+          ExercicioID: exercicio.ExercicioID,
+          NomeExercicio: exercicio.NomeExercicio || "Exercício sem nome",
+          series: exercicioDetail.series || "0",
+          reps: exercicioDetail.reps || "0",
+          observacoes: exercicioDetail.observacoes || "Sem Observações",
+        };
+
+        return [...prevExercicios, exercicioSalvo];
+      }
+    });
+  };
+  const saveExercicioDetails = () => {
+    if (!selectedExercicio || !selectedExercicio.ExercicioID) {
+      console.error("Nenhum exercício selecionado.");
+      return;
+    }
+
+    const exercicioDetail =
+      exercicioDetails[selectedExercicio.ExercicioID] || {};
+
+    // Criação do objeto de exercício a ser salvo
+    const exercicioSalvo: ExercicioTreino = {
+      ExercicioID: selectedExercicio.ExercicioID,
+      NomeExercicio: selectedExercicio.NomeExercicio || "Exercício sem nome",
+      series: exercicioDetail.series || "0",
+      reps: exercicioDetail.reps || "0",
+      observacoes: exercicioDetail.observacoes || "Sem Observações",
+    };
+
+    // Atualiza os exerciciosSalvos no estado
+    setExerciciosSalvos((prevExercicios: ExercicioTreino[]) => {
+      // Verifica se o exercício já existe no estado de exercicios salvos
+      const exercicioExistente = prevExercicios.find(
+        (e) => e.ExercicioID === selectedExercicio.ExercicioID
+      );
+
+      let updatedExercicios: ExercicioTreino[];
+      if (exercicioExistente) {
+        // Se já existe, substitui os dados do exercício
+        updatedExercicios = prevExercicios.map((e) =>
+          e.ExercicioID === selectedExercicio.ExercicioID ? exercicioSalvo : e
+        );
+      } else {
+        // Caso contrário, adiciona um novo exercício
+        updatedExercicios = [...prevExercicios, exercicioSalvo];
+      }
+
+      // Exibe o estado atualizado no console
+      console.log("Estado atualizado de exerciciosSalvos:", updatedExercicios);
+
       return updatedExercicios;
     });
 
-    setSelectedExercicio(null);
+    setDialogOpen(false); // Fecha o modal de edição após salvar
   };
 
   return (
@@ -189,7 +262,6 @@ export default function AdicionarTreinos() {
               <ToggleGroupItem value="Dom">Dom</ToggleGroupItem>
             </ToggleGroup>
             <div className="flex flex-row gap-4">
-              {/* Card Treino do Dia */}
               <Card className="w-1/2">
                 <CardContent>
                   <CardHeader>
@@ -202,7 +274,7 @@ export default function AdicionarTreinos() {
                     {selectedTreino.map((exercicio: Exercicio) => (
                       <AlertDialog
                         key={exercicio.ExercicioID}
-                        open={selectedExercicio === exercicio}
+                        open={dialogOpen}
                       >
                         <AlertDialogTrigger asChild>
                           <div
@@ -284,9 +356,11 @@ export default function AdicionarTreinos() {
                           </div>
 
                           <AlertDialogFooter>
-                            <Button onClick={() => setSelectedExercicio(null)}>
+                            <AlertDialogCancel className="bg-white border-2 border-gray-300 text-[#7209B7] px-4 py-2 rounded-md">
+                              <BiXCircle onClick={() => setDialogOpen(false)} />
                               Cancelar
-                            </Button>
+                            </AlertDialogCancel>
+
                             <Button
                               onClick={saveExercicioDetails}
                               className="bg-blue-500 text-white"
