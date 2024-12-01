@@ -1,6 +1,11 @@
 import axios from "axios";
 import appsettings from "../appsettings.json";
 
-export default axios.create({
+const api = axios.create({
   baseURL: appsettings.baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
+
+export default api;
