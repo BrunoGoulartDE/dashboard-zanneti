@@ -7,6 +7,9 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
+  preview: {
+    port: parseInt(process.env.PORT || "4173"),
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
