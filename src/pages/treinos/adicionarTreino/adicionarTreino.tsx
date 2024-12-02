@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -30,6 +29,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BiCheckCircle, BiXCircle } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 interface Exercicio {
   ExercicioID: number;
@@ -260,17 +260,17 @@ export default function AdicionarTreinos() {
 
   const saveTreino = async () => {
     if (!selectedAluno || !selectedAluno.AlunoID) {
-      alert("Selecione um aluno");
+      toast.warn("Selecione um aluno para continuar.");
       return;
     }
 
     if (!selectedDay) {
-      alert("Selecione um dia");
+      toast.warn("Selecione um dia para o treino.");
       return;
     }
 
     if (selectedTreino.length === 0) {
-      alert("Selecione pelo menos um exercício para o treino");
+      toast.warn("Selecione pelo menos um exercício para o treino");
       return;
     }
 
@@ -307,6 +307,7 @@ export default function AdicionarTreinos() {
         exerciciosTreinos
       );
       await api.post("/exerciciosTreino", exerciciosTreinos);
+      toast.success("Treino cadastrado com sucesso! ");
     } catch (error) {
       console.error("Erro ao adicionar treino:", error);
     }
@@ -340,11 +341,11 @@ export default function AdicionarTreinos() {
           pageDescription="Cadastre um novo treino"
         />
         <div className=" flex flex-col  gap-2 p-4">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             {" "}
             <Label>Escolha um aluno para iniciar:</Label>
             <Select onValueChange={handleAlunoSelect}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-[#FFB744]">
                 <SelectValue placeholder="Alunos">
                   {selectedAluno ? selectedAluno.Nome : "Alunos"}
                 </SelectValue>
@@ -361,149 +362,149 @@ export default function AdicionarTreinos() {
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <div className="flex flex-row gap-2">
-              {daysOfWeek.map((day) => {
-                const hasTreino = alunoTreinos.some(
-                  (treino) => treino.diaSemana === day
-                );
-                return (
-                  <button
-                    key={day}
-                    onClick={() => handleDaySelect(day)}
-                    className={`p-2 rounded ${
-                      selectedDay === day
-                        ? "bg-[#FFB744] text-white"
-                        : hasTreino
-                        ? "bg-gray-400"
-                        : "bg-gray-100"
-                    }`}
-                  >
-                    {day}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex flex-row gap-4">
-              <Card className="w-1/2">
-                <CardContent>
-                  <CardHeader>
-                    <CardTitle>Treino do dia</CardTitle>
-                    <CardDescription>
-                      Clique em um exercício para editar.
-                    </CardDescription>
-                  </CardHeader>
-                  <div className="mt-4 grid grid-cols-1 gap-2">
-                    {selectedTreino.map((exercicio: Exercicio) => (
-                      <div key={exercicio.ExercicioID}>
-                        <div
-                          onClick={() => openExercicioDialog(exercicio)}
-                          className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-blue-100 flex justify-between items-center"
-                        >
-                          <span>{exercicio.NomeExercicio}</span>
-                          <div className="coluna-numeros flex gap-2 text-sm text-gray-600">
-                            <div className="set font-bold border px-2 py-1 rounded-md border-gray-400">
-                              Sets:{" "}
-                              {exercicioDetails[exercicio.ExercicioID]
-                                ?.series || 0}
-                            </div>
-                            <div className="rep font-bold border px-2 py-1 rounded-md border-gray-400">
-                              Reps:{" "}
-                              {exercicioDetails[exercicio.ExercicioID]?.reps ||
-                                0}
-                            </div>
+
+          <div className="flex flex-row gap-4">
+            {daysOfWeek.map((day) => {
+              const hasTreino = alunoTreinos.some(
+                (treino) => treino.diaSemana === day
+              );
+              return (
+                <button
+                  key={day}
+                  onClick={() => handleDaySelect(day)}
+                  className={`p-2 rounded ${
+                    selectedDay === day
+                      ? "bg-yellow-300 text-black"
+                      : hasTreino
+                      ? "bg-[#FFB744]"
+                      : "bg-gray-100"
+                  }`}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex flex-row gap-4">
+            <Card className="w-1/2">
+              <CardContent>
+                <CardHeader>
+                  <CardTitle>Treino do dia</CardTitle>
+                  <CardDescription>
+                    Clique em um exercício para editar.
+                  </CardDescription>
+                </CardHeader>
+                <div className="mt-4 grid grid-cols-1 gap-2">
+                  {selectedTreino.map((exercicio: Exercicio) => (
+                    <div key={exercicio.ExercicioID}>
+                      <div
+                        onClick={() => openExercicioDialog(exercicio)}
+                        className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-blue-100 flex justify-between items-center"
+                      >
+                        <span>{exercicio.NomeExercicio}</span>
+                        <div className="coluna-numeros flex gap-2 text-sm text-gray-600">
+                          <div className="set font-bold border px-2 py-1 rounded-md border-gray-400">
+                            Sets:{" "}
+                            {exercicioDetails[exercicio.ExercicioID]?.series ||
+                              0}
+                          </div>
+                          <div className="rep font-bold border px-2 py-1 rounded-md border-gray-400">
+                            Reps:{" "}
+                            {exercicioDetails[exercicio.ExercicioID]?.reps || 0}
                           </div>
                         </div>
-
-                        <AlertDialog open={dialogOpen}>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Editar Exercício
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Configure as séries, repetições e observações
-                                para este exercício.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-
-                            <div className="flex flex-col gap-4">
-                              <div>
-                                <label>Sets</label>
-                                <input
-                                  type="number"
-                                  value={
-                                    exercicioDetails[exercicio.ExercicioID]
-                                      ?.series || ""
-                                  }
-                                  onChange={(e) =>
-                                    handleInputChange("series", e.target.value)
-                                  }
-                                  className="w-full p-2 border rounded"
-                                />
-                              </div>
-                              <div>
-                                <label>Reps</label>
-                                <input
-                                  type="number"
-                                  value={
-                                    exercicioDetails[exercicio.ExercicioID]
-                                      ?.reps || ""
-                                  }
-                                  onChange={(e) =>
-                                    handleInputChange("reps", e.target.value)
-                                  }
-                                  className="w-full p-2 border rounded"
-                                />
-                              </div>
-                              <div>
-                                <label>Observações</label>
-                                <textarea
-                                  value={
-                                    exercicioDetails[exercicio.ExercicioID]
-                                      ?.observacoes || ""
-                                  }
-                                  onChange={(e) =>
-                                    handleInputChange(
-                                      "observacoes",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="w-full p-2 border rounded"
-                                ></textarea>
-                              </div>
-                            </div>
-
-                            <AlertDialogFooter>
-                              <AlertDialogCancel
-                                className="bg-white border-2 border-gray-300 text-[#7209B7] px-4 py-2 rounded-md flex items-center space-x-2"
-                                onClick={() => setDialogOpen(false)}
-                              >
-                                <BiXCircle />
-                                <span>Cancelar</span>
-                              </AlertDialogCancel>
-
-                              <Button
-                                onClick={saveExercicioDetails}
-                                className="bg-color text-black"
-                              >
-                                <BiCheckCircle />
-                                Salvar
-                              </Button>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
-              <Card className="w-1/2">
-                <CardContent>
-                  <CardHeader>
-                    <CardTitle>Lista de Exercícios</CardTitle>
-                  </CardHeader>
+                      <AlertDialog open={dialogOpen}>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Editar Exercício
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Configure as séries, repetições e observações para
+                              este exercício.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          <div className="flex flex-col gap-4">
+                            <div>
+                              <label>Sets</label>
+                              <input
+                                type="number"
+                                value={
+                                  exercicioDetails[exercicio.ExercicioID]
+                                    ?.series || ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange("series", e.target.value)
+                                }
+                                className="w-full p-2 border rounded"
+                              />
+                            </div>
+                            <div>
+                              <label>Reps</label>
+                              <input
+                                type="number"
+                                value={
+                                  exercicioDetails[exercicio.ExercicioID]
+                                    ?.reps || ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange("reps", e.target.value)
+                                }
+                                className="w-full p-2 border rounded"
+                              />
+                            </div>
+                            <div>
+                              <label>Observações</label>
+                              <textarea
+                                value={
+                                  exercicioDetails[exercicio.ExercicioID]
+                                    ?.observacoes || ""
+                                }
+                                onChange={(e) =>
+                                  handleInputChange(
+                                    "observacoes",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full p-2 border rounded"
+                              ></textarea>
+                            </div>
+                          </div>
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel
+                              className="bg-white border-2 border-gray-300 text-[#FFB744] px-4 py-2 rounded-md flex items-center space-x-2"
+                              onClick={() => setDialogOpen(false)}
+                            >
+                              <BiXCircle />
+                              <span>Cancelar</span>
+                            </AlertDialogCancel>
+
+                            <Button
+                              onClick={saveExercicioDetails}
+                              className="bg-color text-black"
+                            >
+                              <BiCheckCircle />
+                              Salvar
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="w-1/2">
+              <CardContent>
+                <CardHeader>
+                  <CardTitle>Lista de Exercícios</CardTitle>
+                </CardHeader>
+                <div className="flex flex-row gap-8">
                   <input
                     type="text"
                     placeholder="Buscar exercício"
@@ -512,7 +513,7 @@ export default function AdicionarTreinos() {
                     className="w-full p-2 border rounded mb-2"
                   />
                   <Select onValueChange={(value) => setCategoriaFiltro(value)}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[180px] mb-4">
                       <SelectValue placeholder="Categoria" />
                     </SelectTrigger>
                     <SelectContent>
@@ -526,34 +527,38 @@ export default function AdicionarTreinos() {
                       <SelectItem value="Ombro">Ombros</SelectItem>
                     </SelectContent>
                   </Select>
-                  {loading ? (
-                    <p>Carregando...</p>
-                  ) : (
-                    <div className="grid grid-cols-1 gap-2">
-                      {exerciciosFiltrados.map((exercicio) => (
-                        <div
-                          key={exercicio.ExercicioID}
-                          onClick={() => handleSelectExercicio(exercicio)}
-                          className={`p-2 rounded-lg cursor-pointer ${
-                            selectedTreino.some(
-                              (e: Exercicio) =>
-                                e.ExercicioID === exercicio.ExercicioID
-                            )
-                              ? "bg-[#FFB744] text-white"
-                              : "bg-gray-100"
-                          }`}
-                        >
-                          {exercicio.NomeExercicio}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+
+                {loading ? (
+                  <p>Carregando...</p>
+                ) : (
+                  <div
+                    className="grid grid-cols-1 gap-2 overflow-y-auto"
+                    style={{ maxHeight: "400px" }} // Customize height as needed
+                  >
+                    {exerciciosFiltrados.map((exercicio) => (
+                      <div
+                        key={exercicio.ExercicioID}
+                        onClick={() => handleSelectExercicio(exercicio)}
+                        className={`p-2 rounded-lg cursor-pointer ${
+                          selectedTreino.some(
+                            (e: Exercicio) =>
+                              e.ExercicioID === exercicio.ExercicioID
+                          )
+                            ? "bg-[#FFB744] text-black"
+                            : "bg-gray-100"
+                        }`}
+                      >
+                        {exercicio.NomeExercicio}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
-          <Button onClick={saveTreino}>Salvar Treino</Button>
         </div>
+        <Button onClick={saveTreino}>Salvar Treino</Button>
       </div>
     </MainLayout>
   );
