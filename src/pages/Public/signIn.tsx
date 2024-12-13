@@ -43,7 +43,7 @@ const SignIn = () => {
   async function onSubmit(values: z.infer<typeof sendSignIn>) {
     setLoading(true);
     try {
-      const response = await api.post(`/auth/login`, {
+      const response = await api.post(`/api/auth/login`, {
         username: values.username,
         password: values.password,
       });
